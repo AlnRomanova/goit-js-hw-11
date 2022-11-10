@@ -14,11 +14,15 @@ const pixabayApi = new PixabayApi();
 const onSearchSubmitForm = async event => {
   event.preventDefault();
 
+
   const searchQuery = event.currentTarget.elements.searchQuery.value;
+
+  pixabayApi.page = 1;
 
   try {
     const {data} = await pixabayApi.fetchPhotos(searchQuery);
-    console.log(data)
+    console.log(pixabayApi.page)
+    Notiflix.Notify.success(`Hooray! We found ${data.totalHits} images.`);
 
     galleryListEl.innerHTML =  renderGalleryList(data.hits);
     loadMoreBtn.classList.remove('is-hidden')
@@ -72,22 +76,16 @@ const onLoadMoreBtnClick = async () => {
 
     console.log(data);
 
-    if (pixabayApi.page === Math.ceil(data.total / 40)) {
+    if (pixabayApi.page === Math.ceil(data.totalHits / 40)) {
       loadMoreBtn.classList.add('is-hidden');
-
+      Notiflix.Notify.failure("We're sorry, but you've reached the end of search results.");
     }
-
-
 
     galleryListEl.innerHTML += renderGalleryList(data.hits);
 
-    if (pixabayApi.page > data.totalHits) {
-      loadMoreBtn.classList.remove('is-hidden');
-      Notiflix.Notify.failure("We're sorry, but you've reached the end of search results.");
-  }
   } catch (err) {
     console.log(err);
-  } 
+  }
 };
 
 formEl.addEventListener('submit', onSearchSubmitForm);
