@@ -31,11 +31,11 @@ const onSearchSubmitForm = async event => {
     gallery.refresh(data.hits);
 
 
-       if (!data.hits.length) {
-        loadMoreBtn.classList.add('is-hidden')
-      Notiflix.Notify.failure("Sorry, there are no images matching your search query. Please try again.");
+    if (!data.hits.length) {
+    loadMoreBtn.classList.add('is-hidden')
+    Notiflix.Notify.failure("Sorry, there are no images matching your search query. Please try again.");
 
-       }
+    }
 
    } catch(err) {
     console.log(err);
