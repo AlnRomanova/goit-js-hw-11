@@ -20,18 +20,21 @@ const onSearchSubmitForm = async event => {
 
   try {
     const {data} = await pixabayApi.fetchPhotos(searchQuery);
-    console.log(pixabayApi.page)
+
+    if (data.hits.length) {
+    loadMoreBtn.classList.remove('is-hidden')
     Notiflix.Notify.success(`Hooray! We found ${data.totalHits} images.`);
+    }
 
     galleryListEl.innerHTML = renderGalleryList(data.hits);
     let gallery = new SimpleLightbox('.gallery a');
     gallery.refresh(data.hits);
 
-    loadMoreBtn.classList.remove('is-hidden')
-
 
        if (!data.hits.length) {
+        loadMoreBtn.classList.add('is-hidden')
       Notiflix.Notify.failure("Sorry, there are no images matching your search query. Please try again.");
+
        }
 
    } catch(err) {
@@ -46,20 +49,24 @@ function renderGalleryList(data) {
      .map(({largeImageURL, webformatURL, tags, likes, views, comments, downloads}) => {
       return `<div class="photo-card">
       <a class="gallery__item" href="${largeImageURL}">
-        <img src="${webformatURL}" alt="${tags}" loading="lazy" />
+        <img src="${webformatURL}" alt="${tags}" loading="lazy" height="300px" width="450px" />
         </a>
         <div class="info">
          <p class="info-item">
-         <b>Likes: ${likes}</b>
+         <b>Likes</b>
+         ${likes}
           </p>
          <p class="info-item">
-         <b>Views: ${views}</b>
+         <b>Views</b>
+         ${views}
          </p>
         <p class="info-item">
-        <b>Comments: ${comments}</b>
+        <b>Comments</b>
+        ${comments}
          </p>
           <p class="info-item">
-         <b>Downloads: ${downloads} </b>
+         <b>Downloads</b>
+         ${downloads}
            </p>
             </div>
          </div>`
