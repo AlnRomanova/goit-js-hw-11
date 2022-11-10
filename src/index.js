@@ -14,7 +14,6 @@ const pixabayApi = new PixabayApi();
 const onSearchSubmitForm = async event => {
   event.preventDefault();
 
-
   const searchQuery = event.currentTarget.elements.searchQuery.value;
 
   pixabayApi.page = 1;
@@ -24,28 +23,31 @@ const onSearchSubmitForm = async event => {
     console.log(pixabayApi.page)
     Notiflix.Notify.success(`Hooray! We found ${data.totalHits} images.`);
 
-    galleryListEl.innerHTML =  renderGalleryList(data.hits);
+    galleryListEl.innerHTML = renderGalleryList(data.hits);
+    let gallery = new SimpleLightbox('.gallery a');
+    gallery.refresh(data.hits);
+
     loadMoreBtn.classList.remove('is-hidden')
 
 
-    if (!data.hits.length) {
+       if (!data.hits.length) {
       Notiflix.Notify.failure("Sorry, there are no images matching your search query. Please try again.");
-  }
+       }
 
-
-} catch(err) {
+   } catch(err) {
     console.log(err);
+
+   };
 
 };
 
-
-}
-
-function renderGalleryList(photos) {
-  return photos
-     .map(({webformatURL, tags, likes, views, comments, downloads}) => {
+function renderGalleryList(data) {
+  return data
+     .map(({largeImageURL, webformatURL, tags, likes, views, comments, downloads}) => {
       return `<div class="photo-card">
+      <a class="gallery__item" href="${largeImageURL}">
         <img src="${webformatURL}" alt="${tags}" loading="lazy" />
+        </a>
         <div class="info">
          <p class="info-item">
          <b>Likes: ${likes}</b>
@@ -63,10 +65,7 @@ function renderGalleryList(photos) {
          </div>`
      }) .join("");
 
-
-
-  }
-
+  };
 
 const onLoadMoreBtnClick = async () => {
   pixabayApi.page += 1;
@@ -74,7 +73,6 @@ const onLoadMoreBtnClick = async () => {
   try {
     const {data} = await pixabayApi.fetchPhotos(formEl.value);
 
-    console.log(data);
 
     if (pixabayApi.page === Math.ceil(data.totalHits / 40)) {
       loadMoreBtn.classList.add('is-hidden');
@@ -82,10 +80,23 @@ const onLoadMoreBtnClick = async () => {
     }
 
     galleryListEl.innerHTML += renderGalleryList(data.hits);
+     let gallery = new SimpleLightbox('.gallery a');
+     gallery.refresh(data.hits)
 
   } catch (err) {
     console.log(err);
   }
+
+  const { height: cardHeight } = document
+  .querySelector(".gallery")
+  .firstElementChild.getBoundingClientRect();
+
+  window.scrollBy({
+  top: cardHeight * 2,
+  behavior: "smooth",
+
+});
+
 };
 
 formEl.addEventListener('submit', onSearchSubmitForm);
