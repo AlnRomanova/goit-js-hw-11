@@ -1,20 +1,38 @@
+import axios from 'axios'
+
 export class PixabayApi {
   #BASE_URL = 'https://pixabay.com/api/';
+  #API_KEY = '31209256-0b3a6934894cd0b0ba6ec9540';
 
 
   page = 1;
-  query = null;
 
- fetchPhotos() {
-   return fetch(
-    `${this.#BASE_URL}?key=31209256-0b3a6934894cd0b0ba6ec9540&q=${this.query}&image_type=photo&orientation=horizontal&safesearch=true`
-    ).then(response => {
-      if(!response.ok) {
-        throw new Error(response.status)
-      }
-      return response.json()
-    })
+
+
+ fetchPhotos(searchQuery) {
+   return axios.get(
+    `${this.#BASE_URL}?`, {
+    params: {
+     key: this.#API_KEY,
+     q: searchQuery,
+     page: this.page,
+     per_page: 90,
+     image_type: 'photo',
+     orientation: 'horizontal',
+     safesearch: 'true',
+      },
+    });
  }
-
-
 }
+
+
+
+  // const searchParams = new URLSearchParams({
+  //   key: this.#API_KEY,
+  //   q: this.searchQuery,
+  //   page: this.page,
+  //   per_page: 40,
+  //   image_type: 'photo',
+  //   orientation: 'horizontal',
+  //   safesearch: 'true',
+  // });
