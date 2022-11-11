@@ -33,9 +33,9 @@ const onSearchSubmitForm = async event => {
 
     if (!data.hits.length) {
     loadMoreBtn.classList.add('is-hidden')
-    Notiflix.Notify.failure("Sorry, there are no images matching your search query. Please try again.");
+      Notiflix.Notify.failure("Sorry, there are no images matching your search query. Please try again.");
 
-    }
+       }
 
    } catch(err) {
     console.log(err);
@@ -49,7 +49,7 @@ function renderGalleryList(data) {
      .map(({largeImageURL, webformatURL, tags, likes, views, comments, downloads}) => {
       return `<div class="photo-card">
       <a class="gallery__item" href="${largeImageURL}">
-        <img src="${webformatURL}" alt="${tags}" loading="lazy" height="300px" width="450px" />
+        <img src="${webformatURL}" alt="${tags}" loading="lazy" width="450px" height="300px" />
         </a>
         <div class="info">
          <p class="info-item">
@@ -78,7 +78,7 @@ const onLoadMoreBtnClick = async () => {
   pixabayApi.page += 1;
 
   try {
-    const {data} = await pixabayApi.fetchPhotos(formEl.value);
+    const {data} = await pixabayApi.fetchPhotos(formEl.firstElementChild.value);
 
 
     if (pixabayApi.page === Math.ceil(data.totalHits / 40)) {

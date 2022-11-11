@@ -98,3 +98,17 @@ input:hover, :focus {
   color: #fff;
   border: transparent;
 }
+
+.photo-card{
+  width: 23%;
+}
+
+.gallery__item {
+  display: block;
+}
+
+.gallery__item > img {
+  display: block;
+  width: 100%;
+  max-height: 100%;
+}
